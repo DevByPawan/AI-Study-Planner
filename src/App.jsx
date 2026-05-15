@@ -28,18 +28,21 @@ function App() {
           subject: "Mathematics Revision",
           hours: "2 Hours",
           priority: "High",
+          examDate: "2026-06-01",
           completed: false
         },
         {
           subject: "Physics Numericals",
           hours: "1.5 Hours",
           priority: "Medium",
+          examDate: "2026-06-10",
           completed: false
         },
         {
           subject: "Chemistry Notes",
           hours: "1 Hour",
           priority: "Low",
+          examDate: "2026-06-15",
           completed: true
         }
       ]
@@ -48,10 +51,12 @@ function App() {
   const [subject, setSubject] = useState("")
   const [hours, setHours] = useState("")
   const [priority, setPriority] = useState("Medium")
+  const [examDate, setExamDate] = useState("")
+  const [dailyHours, setDailyHours] = useState("")
 
   const addTask = () => {
 
-    if (!subject || !hours) {
+    if (!subject || !hours || !examDate) {
       return
     }
 
@@ -59,6 +64,7 @@ function App() {
       subject,
       hours,
       priority,
+      examDate,
       completed: false
     }
 
@@ -67,6 +73,8 @@ function App() {
     setSubject("")
     setHours("")
     setPriority("Medium")
+    setExamDate("")
+    setDailyHours("")
   }
 
   const deleteTask = (index) => {
@@ -141,43 +149,28 @@ function App() {
         <ul className="space-y-6 text-gray-300">
 
           <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-
             <LayoutDashboard size={20} />
-
             Dashboard
-
           </li>
 
           <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-
             <BookOpen size={20} />
-
             Planner
-
           </li>
 
           <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-
             <BarChart3 size={20} />
-
             Analytics
-
           </li>
 
           <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-
             <Bot size={20} />
-
             AI Assistant
-
           </li>
 
           <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-
             <Settings size={20} />
-
             Settings
-
           </li>
 
         </ul>
@@ -208,14 +201,14 @@ function App() {
 
         </div>
 
-        {/* Add Task */}
+        {/* AI Smart Scheduler */}
         <div className="bg-[#1e293b] p-6 rounded-3xl mb-8 shadow-xl">
 
           <h3 className="text-2xl font-bold mb-6">
-            Add Study Task
+            AI Smart Scheduler
           </h3>
 
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-6 gap-4">
 
             <input
               type="text"
@@ -243,6 +236,21 @@ function App() {
               <option>Low</option>
             </select>
 
+            <input
+              type="date"
+              value={examDate}
+              onChange={(e) => setExamDate(e.target.value)}
+              className="bg-[#0f172a] p-4 rounded-2xl outline-none"
+            />
+
+            <input
+              type="number"
+              placeholder="Daily Study Hours"
+              value={dailyHours}
+              onChange={(e) => setDailyHours(e.target.value)}
+              className="bg-[#0f172a] p-4 rounded-2xl outline-none"
+            />
+
             <button
               onClick={addTask}
               className="bg-blue-600 rounded-2xl hover:bg-blue-700 transition"
@@ -260,13 +268,11 @@ function App() {
           <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
             <div className="flex items-center justify-between mb-4">
-
               <h3 className="text-gray-400">
                 Total Tasks
               </h3>
 
               <BookOpen className="text-blue-400" />
-
             </div>
 
             <p className="text-5xl font-bold">
@@ -278,13 +284,11 @@ function App() {
           <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
             <div className="flex items-center justify-between mb-4">
-
               <h3 className="text-gray-400">
                 Completed
               </h3>
 
               <CheckCircle className="text-green-400" />
-
             </div>
 
             <p className="text-5xl font-bold">
@@ -296,13 +300,11 @@ function App() {
           <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
             <div className="flex items-center justify-between mb-4">
-
               <h3 className="text-gray-400">
                 High Priority
               </h3>
 
               <Flame className="text-red-400" />
-
             </div>
 
             <p className="text-5xl font-bold text-red-400">
@@ -314,13 +316,11 @@ function App() {
           <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
             <div className="flex items-center justify-between mb-4">
-
               <h3 className="text-gray-400">
                 Productivity
               </h3>
 
               <BarChart3 className="text-cyan-400" />
-
             </div>
 
             <p className="text-5xl font-bold">
@@ -331,7 +331,7 @@ function App() {
 
         </div>
 
-        {/* Progress Section */}
+        {/* Progress */}
         <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
           <div className="flex justify-between mb-4">
@@ -371,10 +371,10 @@ function App() {
           <p className="text-gray-300 text-lg">
 
             {productivity < 40
-              ? "You should focus more on completing your pending tasks today."
+              ? "Focus on completing high priority subjects before the exam date."
               : productivity < 80
-                ? "Good progress! Try completing a few more tasks."
-                : "Excellent productivity today. Keep up the great work!"
+                ? "Good progress! Keep revising important topics consistently."
+                : "Excellent productivity today. Your exam preparation is on track!"
             }
 
           </p>
@@ -385,7 +385,7 @@ function App() {
         <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
           <h3 className="text-2xl font-bold mb-6">
-            Today’s Study Plan
+            Smart Study Plan
           </h3>
 
           <div className="space-y-4">
@@ -403,8 +403,8 @@ function App() {
 
                     <p
                       className={`font-semibold text-lg ${task.completed
-                        ? "line-through text-gray-500"
-                        : ""
+                          ? "line-through text-gray-500"
+                          : ""
                         }`}
                     >
                       {task.subject}
@@ -425,6 +425,10 @@ function App() {
                     {task.hours}
 
                   </div>
+
+                  <p className="text-gray-400 text-sm mt-2">
+                    Exam Date: {task.examDate}
+                  </p>
 
                 </div>
 
