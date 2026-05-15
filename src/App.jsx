@@ -53,7 +53,8 @@ function App() {
   const [priority, setPriority] = useState("Medium")
   const [examDate, setExamDate] = useState("")
   const [dailyHours, setDailyHours] = useState("")
-
+  const [syllabus, setSyllabus] = useState("")
+  const [analyzedTopics, setAnalyzedTopics] = useState([])
   const addTask = () => {
 
     if (!subject || !hours || !examDate) {
@@ -93,7 +94,47 @@ function App() {
 
     setTasks(updatedTasks)
   }
+  const analyzeSyllabus = () => {
 
+    if (!syllabus) {
+      return
+    }
+
+    const topics = syllabus
+      .split(",")
+      .map((topic) => topic.trim())
+
+    const analyzed = topics.map((topic) => {
+
+      let priority = "Low"
+
+      if (
+        topic.toLowerCase().includes("algorithm") ||
+        topic.toLowerCase().includes("probability") ||
+        topic.toLowerCase().includes("machine learning") ||
+        topic.toLowerCase().includes("ai") ||
+        topic.toLowerCase().includes("data structure") ||
+        topic.toLowerCase().includes("operating system")
+      ) {
+        priority = "High"
+      }
+
+      else if (
+        topic.toLowerCase().includes("graph") ||
+        topic.toLowerCase().includes("database")
+      ) {
+        priority = "Medium"
+      }
+
+      return {
+        topic,
+        priority
+      }
+
+    })
+
+    setAnalyzedTopics(analyzed)
+  }
   // Local Storage
   useEffect(() => {
 
@@ -146,6 +187,17 @@ function App() {
   const recommendedTasks = sortedTasks
     .filter((task) => !task.completed)
     .slice(0, 3)
+  const roadmap = recommendedTasks.map((task, index) => {
+
+    return {
+      day: `Day ${index + 1}`,
+      subject: task.subject,
+      hours: task.hours,
+      examDate: task.examDate,
+      priority: task.priority
+    }
+
+  })
   const getPriorityColor = (priority) => {
 
     if (priority === "High") {
@@ -290,7 +342,65 @@ function App() {
           </div>
 
         </div>
+        {/* AI Topic Analyzer */}
+        <div className="bg-[#1e293b] p-6 rounded-3xl mb-8 shadow-xl">
 
+          <h3 className="text-2xl font-bold mb-6">
+            AI Syllabus Analyzer
+          </h3>
+
+          <div className="flex flex-col gap-4">
+
+            <textarea
+              placeholder="Enter syllabus topics separated by commas"
+              value={syllabus}
+              onChange={(e) => setSyllabus(e.target.value)}
+              className="bg-[#0f172a] p-4 rounded-2xl outline-none min-h-[120px]"
+            />
+
+            <button
+              onClick={analyzeSyllabus}
+              className="bg-cyan-600 hover:bg-cyan-700 transition p-4 rounded-2xl"
+            >
+              Analyze Topics
+            </button>
+
+          </div>
+
+        </div>
+        {/* AI Analyzed Topics */}
+        <div className="bg-[#1e293b] p-6 rounded-3xl mb-8 shadow-xl">
+
+          <h3 className="text-2xl font-bold mb-6">
+            AI Topic Priority Analysis
+          </h3>
+
+          <div className="space-y-4">
+
+            {analyzedTopics.map((item, index) => (
+
+              <div
+                key={index}
+                className="bg-[#0f172a] p-4 rounded-2xl flex justify-between items-center"
+              >
+
+                <p className="font-semibold">
+                  {item.topic}
+                </p>
+
+                <span
+                  className={`${getPriorityColor(item.priority)} px-3 py-1 rounded-full`}
+                >
+                  {item.priority}
+                </span>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
@@ -451,6 +561,63 @@ function App() {
                     className={`${getPriorityColor(task.priority)} px-3 py-1 rounded-full text-sm`}
                   >
                     {task.priority}
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+        {/* AI Study Roadmap */}
+        <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
+
+          <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+
+            <Bot className="text-cyan-400" />
+
+            AI Study Roadmap
+
+          </h3>
+
+          <div className="space-y-4">
+
+            {roadmap.map((item, index) => (
+
+              <div
+                key={index}
+                className="bg-[#0f172a] p-5 rounded-2xl"
+              >
+
+                <div className="flex justify-between items-center">
+
+                  <div>
+
+                    <p className="text-cyan-400 font-semibold">
+                      {item.day}
+                    </p>
+
+                    <p className="text-lg font-bold mt-1">
+                      {item.subject}
+                    </p>
+
+                    <p className="text-blue-400 text-sm mt-1">
+                      {item.hours}
+                    </p>
+
+                    <p className="text-gray-400 text-sm mt-1">
+                      Exam: {item.examDate}
+                    </p>
+
+                  </div>
+
+                  <span
+                    className={`${getPriorityColor(item.priority)} px-3 py-1 rounded-full`}
+                  >
+                    {item.priority}
                   </span>
 
                 </div>
