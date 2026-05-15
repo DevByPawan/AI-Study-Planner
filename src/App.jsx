@@ -55,6 +55,7 @@ function App() {
   const [dailyHours, setDailyHours] = useState("")
   const [syllabus, setSyllabus] = useState("")
   const [analyzedTopics, setAnalyzedTopics] = useState([])
+  const [streak, setStreak] = useState(0)
   const addTask = () => {
 
     if (!subject || !hours || !examDate) {
@@ -93,6 +94,11 @@ function App() {
       !updatedTasks[index].completed
 
     setTasks(updatedTasks)
+    const completedCount = updatedTasks.filter(
+      (task) => task.completed
+    ).length
+
+    setStreak(completedCount)
   }
   const analyzeSyllabus = () => {
 
@@ -402,8 +408,25 @@ function App() {
 
         </div>
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
+
+            <div className="flex items-center justify-between mb-4">
+
+              <h3 className="text-gray-400">
+                Study Streak
+              </h3>
+
+              <Flame className="text-orange-400" />
+
+            </div>
+
+            <p className="text-5xl font-bold text-orange-400">
+              🔥 {streak}
+            </p>
+
+          </div>
           <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
             <div className="flex items-center justify-between mb-4">
