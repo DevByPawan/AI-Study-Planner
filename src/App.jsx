@@ -117,6 +117,35 @@ function App() {
     (task) => task.priority === "High"
   ).length
 
+  const sortedTasks = [...tasks].sort((a, b) => {
+
+    // High priority first
+    const priorityOrder = {
+      High: 1,
+      Medium: 2,
+      Low: 3
+    }
+
+    // Compare priority
+    if (
+      priorityOrder[a.priority] !==
+      priorityOrder[b.priority]
+    ) {
+      return (
+        priorityOrder[a.priority] -
+        priorityOrder[b.priority]
+      )
+    }
+
+    // Compare exam dates
+    return (
+      new Date(a.examDate) -
+      new Date(b.examDate)
+    )
+  })
+  const recommendedTasks = sortedTasks
+    .filter((task) => !task.completed)
+    .slice(0, 3)
   const getPriorityColor = (priority) => {
 
     if (priority === "High") {
@@ -380,17 +409,73 @@ function App() {
           </p>
 
         </div>
+        {/* AI Recommended Tasks */}
+        <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
+          <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+
+            <Bot className="text-cyan-400" />
+
+            Today's AI Focus
+
+          </h3>
+
+          <div className="space-y-4">
+
+            {recommendedTasks.map((task, index) => (
+
+              <div
+                key={index}
+                className="bg-[#0f172a] p-5 rounded-2xl"
+              >
+
+                <div className="flex justify-between items-center">
+
+                  <div>
+
+                    <p className="font-semibold text-lg">
+                      {task.subject}
+                    </p>
+
+                    <p className="text-blue-400 text-sm mt-1">
+                      {task.hours}
+                    </p>
+
+                    <p className="text-gray-400 text-sm mt-1">
+                      Exam: {task.examDate}
+                    </p>
+
+                  </div>
+
+                  <span
+                    className={`${getPriorityColor(task.priority)} px-3 py-1 rounded-full text-sm`}
+                  >
+                    {task.priority}
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
         {/* Task List */}
         <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
           <h3 className="text-2xl font-bold mb-6">
+            <p className="text-gray-400 mb-2">
+              AI generated schedule based on
+              exam priority and deadlines.
+            </p>
             Smart Study Plan
           </h3>
 
           <div className="space-y-4">
 
-            {tasks.map((task, index) => (
+            {sortedTasks.map((task, index) => (
 
               <div
                 key={index}
@@ -403,8 +488,8 @@ function App() {
 
                     <p
                       className={`font-semibold text-lg ${task.completed
-                          ? "line-through text-gray-500"
-                          : ""
+                        ? "line-through text-gray-500"
+                        : ""
                         }`}
                     >
                       {task.subject}
