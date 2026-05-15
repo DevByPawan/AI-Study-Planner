@@ -15,6 +15,9 @@ import {
   Flame
 } from "lucide-react"
 
+import Sidebar from "./components/Sidebar"
+import StatsCard from "./components/StatsCard"
+
 function App() {
 
   const [tasks, setTasks] = useState(() => {
@@ -219,50 +222,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white flex">
-
-      {/* Sidebar */}
-      <div className="w-72 bg-[#111827] p-6 hidden md:block">
-
-        <div className="flex items-center gap-3 mb-10">
-
-          <Bot className="text-blue-400" size={34} />
-
-          <h1 className="text-3xl font-bold">
-            StudyAI
-          </h1>
-
-        </div>
-
-        <ul className="space-y-6 text-gray-300">
-
-          <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-            <LayoutDashboard size={20} />
-            Dashboard
-          </li>
-
-          <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-            <BookOpen size={20} />
-            Planner
-          </li>
-
-          <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-            <BarChart3 size={20} />
-            Analytics
-          </li>
-
-          <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-            <Bot size={20} />
-            AI Assistant
-          </li>
-
-          <li className="flex items-center gap-3 hover:text-white cursor-pointer transition">
-            <Settings size={20} />
-            Settings
-          </li>
-
-        </ul>
-
-      </div>
+      <Sidebar />
 
       {/* Main */}
       <div className="flex-1 p-8">
@@ -408,88 +368,39 @@ function App() {
 
         </div>
         {/* Stats */}
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
-            <div className="flex items-center justify-between mb-4">
+          <StatsCard
+            title="Study Streak"
+            value={`🔥 ${streak}`}
+            icon={<Flame className="text-orange-400" />}
+            valueColor="text-orange-400"
+          />
 
-              <h3 className="text-gray-400">
-                Study Streak
-              </h3>
+          <StatsCard
+            title="Total Tasks"
+            value={tasks.length}
+            icon={<BookOpen className="text-blue-400" />}
+          />
 
-              <Flame className="text-orange-400" />
+          <StatsCard
+            title="Completed"
+            value={completedTasks}
+            icon={<CheckCircle className="text-green-400" />}
+          />
 
-            </div>
+          <StatsCard
+            title="High Priority"
+            value={highPriorityTasks}
+            icon={<Flame className="text-red-400" />}
+            valueColor="text-red-400"
+          />
 
-            <p className="text-5xl font-bold text-orange-400">
-              🔥 {streak}
-            </p>
-
-          </div>
-          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
-
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-400">
-                Total Tasks
-              </h3>
-
-              <BookOpen className="text-blue-400" />
-            </div>
-
-            <p className="text-5xl font-bold">
-              {tasks.length}
-            </p>
-
-          </div>
-
-          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
-
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-400">
-                Completed
-              </h3>
-
-              <CheckCircle className="text-green-400" />
-            </div>
-
-            <p className="text-5xl font-bold">
-              {completedTasks}
-            </p>
-
-          </div>
-
-          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
-
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-400">
-                High Priority
-              </h3>
-
-              <Flame className="text-red-400" />
-            </div>
-
-            <p className="text-5xl font-bold text-red-400">
-              {highPriorityTasks}
-            </p>
-
-          </div>
-
-          <div className="bg-[#1e293b] p-6 rounded-3xl shadow-xl">
-
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-400">
-                Productivity
-              </h3>
-
-              <BarChart3 className="text-cyan-400" />
-            </div>
-
-            <p className="text-5xl font-bold">
-              {productivity}%
-            </p>
-
-          </div>
+          <StatsCard
+            title="Productivity"
+            value={`${productivity}%`}
+            icon={<BarChart3 className="text-cyan-400" />}
+          />
 
         </div>
 
