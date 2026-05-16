@@ -17,6 +17,11 @@ import {
 
 import Sidebar from "./components/Sidebar"
 import StatsCard from "./components/StatsCard"
+import TaskCard from "./components/TaskCard"
+import AIRecommendation from "./components/AIRecommendation"
+import TopicAnalyzer from "./components/TopicAnalyzer"
+import ProductivityChart from "./components/ProductivityChart"
+import SyllabusAnalyzer from "./components/SyllabusAnalyzer";
 
 function App() {
 
@@ -28,6 +33,7 @@ function App() {
       ? JSON.parse(savedTasks)
       : [
         {
+          id: 1,
           subject: "Mathematics Revision",
           hours: "2 Hours",
           priority: "High",
@@ -35,13 +41,16 @@ function App() {
           completed: false
         },
         {
+          id: 2,
           subject: "Physics Numericals",
           hours: "1.5 Hours",
           priority: "Medium",
           examDate: "2026-06-10",
-          completed: false
+          completed:
+            false
         },
         {
+          id: 3,
           subject: "Chemistry Notes",
           hours: "1 Hour",
           priority: "Low",
@@ -66,6 +75,7 @@ function App() {
     }
 
     const newTask = {
+      id: Date.now(),
       subject,
       hours,
       priority,
@@ -82,21 +92,31 @@ function App() {
     setDailyHours("")
   }
 
-  const deleteTask = (index) => {
+  const deleteTask = (id) => {
 
-    const updatedTasks = tasks.filter((_, i) => i !== index)
+    const updatedTasks = tasks.filter(
+      (task) => task.id !== id
+    )
 
     setTasks(updatedTasks)
   }
 
-  const toggleComplete = (index) => {
+  const toggleComplete = (id) => {
 
-    const updatedTasks = [...tasks]
+    const updatedTasks = tasks.map((task) => {
 
-    updatedTasks[index].completed =
-      !updatedTasks[index].completed
+      if (task.id === id) {
+        return {
+          ...task,
+          completed: !task.completed
+        }
+      }
+
+      return task
+    })
 
     setTasks(updatedTasks)
+
     const completedCount = updatedTasks.filter(
       (task) => task.completed
     ).length
@@ -158,6 +178,8 @@ function App() {
   const completedTasks = tasks.filter(
     (task) => task.completed
   ).length
+  const pendingTasks =
+    tasks.length - completedTasks
 
   const productivity = tasks.length > 0
     ? Math.round((completedTasks / tasks.length) * 100)
@@ -308,65 +330,8 @@ function App() {
           </div>
 
         </div>
-        {/* AI Topic Analyzer */}
-        <div className="bg-[#1e293b] p-6 rounded-3xl mb-8 shadow-xl">
+        <SyllabusAnalyzer />
 
-          <h3 className="text-2xl font-bold mb-6">
-            AI Syllabus Analyzer
-          </h3>
-
-          <div className="flex flex-col gap-4">
-
-            <textarea
-              placeholder="Enter syllabus topics separated by commas"
-              value={syllabus}
-              onChange={(e) => setSyllabus(e.target.value)}
-              className="bg-[#0f172a] p-4 rounded-2xl outline-none min-h-[120px]"
-            />
-
-            <button
-              onClick={analyzeSyllabus}
-              className="bg-cyan-600 hover:bg-cyan-700 transition p-4 rounded-2xl"
-            >
-              Analyze Topics
-            </button>
-
-          </div>
-
-        </div>
-        {/* AI Analyzed Topics */}
-        <div className="bg-[#1e293b] p-6 rounded-3xl mb-8 shadow-xl">
-
-          <h3 className="text-2xl font-bold mb-6">
-            AI Topic Priority Analysis
-          </h3>
-
-          <div className="space-y-4">
-
-            {analyzedTopics.map((item, index) => (
-
-              <div
-                key={index}
-                className="bg-[#0f172a] p-4 rounded-2xl flex justify-between items-center"
-              >
-
-                <p className="font-semibold">
-                  {item.topic}
-                </p>
-
-                <span
-                  className={`${getPriorityColor(item.priority)} px-3 py-1 rounded-full`}
-                >
-                  {item.priority}
-                </span>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
@@ -403,7 +368,10 @@ function App() {
           />
 
         </div>
-
+        <ProductivityChart
+          completedTasks={completedTasks}
+          pendingTasks={pendingTasks}
+        />
         {/* Progress */}
         <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
@@ -430,29 +398,7 @@ function App() {
 
         </div>
 
-        {/* AI Recommendation */}
-        <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
-
-          <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-
-            <Bot className="text-cyan-400" />
-
-            AI Recommendation
-
-          </h3>
-
-          <p className="text-gray-300 text-lg">
-
-            {productivity < 40
-              ? "Focus on completing high priority subjects before the exam date."
-              : productivity < 80
-                ? "Good progress! Keep revising important topics consistently."
-                : "Excellent productivity today. Your exam preparation is on track!"
-            }
-
-          </p>
-
-        </div>
+        <AIRecommendation productivity={productivity} />
         {/* AI Recommended Tasks */}
         <div className="mt-10 bg-[#1e293b] p-6 rounded-3xl shadow-xl">
 
@@ -578,73 +524,14 @@ function App() {
 
             {sortedTasks.map((task, index) => (
 
-              <div
+              <TaskCard
                 key={index}
-                className="flex justify-between items-center bg-[#0f172a] p-5 rounded-2xl"
-              >
-
-                <div>
-
-                  <div className="flex items-center gap-3 mb-2">
-
-                    <p
-                      className={`font-semibold text-lg ${task.completed
-                        ? "line-through text-gray-500"
-                        : ""
-                        }`}
-                    >
-                      {task.subject}
-                    </p>
-
-                    <span
-                      className={`${getPriorityColor(task.priority)} text-xs px-3 py-1 rounded-full`}
-                    >
-                      {task.priority}
-                    </span>
-
-                  </div>
-
-                  <div className="flex items-center gap-2 text-blue-400 text-sm">
-
-                    <Clock3 size={16} />
-
-                    {task.hours}
-
-                  </div>
-
-                  <p className="text-gray-400 text-sm mt-2">
-                    Exam Date: {task.examDate}
-                  </p>
-
-                </div>
-
-                <div className="flex gap-3">
-
-                  <button
-                    onClick={() => toggleComplete(index)}
-                    className="bg-green-600 px-4 py-3 rounded-xl hover:bg-green-700 transition flex items-center gap-2"
-                  >
-
-                    <CheckCircle size={18} />
-
-                    {task.completed ? "Undo" : "Done"}
-
-                  </button>
-
-                  <button
-                    onClick={() => deleteTask(index)}
-                    className="bg-red-600 px-4 py-3 rounded-xl hover:bg-red-700 transition flex items-center gap-2"
-                  >
-
-                    <Trash2 size={18} />
-
-                    Delete
-
-                  </button>
-
-                </div>
-
-              </div>
+                task={task}
+                index={index}
+                toggleComplete={toggleComplete}
+                deleteTask={deleteTask}
+                getPriorityColor={getPriorityColor}
+              />
 
             ))}
 
