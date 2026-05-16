@@ -51,6 +51,7 @@ This application helps students manage study tasks, track productivity, organize
 
 ![Study Plan](./screenshots/study-plan.png)
 
+
 ---
 
 # 🚀 Installation
