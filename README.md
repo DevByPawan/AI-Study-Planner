@@ -40,9 +40,15 @@ This application helps students manage study tasks, track productivity, organize
 
 ---
 
-## Tasks Section
+## AI Roadmap
 
-![Tasks](screenshots/tasks-section.png)
+![AI Roadmap](ai-roadmap.png)
+
+---
+
+## Study Planner
+
+![Study Planner Image](Study-Plan.png)
 
 ---
 
