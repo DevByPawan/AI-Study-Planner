@@ -49,7 +49,7 @@ This application helps students manage study tasks, track productivity, organize
 
 ## Study Plan
 
-![Study Plan](./screenshots/study-plan.png)
+![Study Plan](./screenshots/studyplan.png)
 
 
 ---
