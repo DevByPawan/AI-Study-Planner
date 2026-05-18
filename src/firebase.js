@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app"
 
+import {
+    getAuth,
+    GoogleAuthProvider
+}
+    from "firebase/auth"
 const firebaseConfig = {
     apiKey: "AIzaSyBTdoxeJEy65TphQm3wS-Mvsxq2g5MirdE",
     authDomain: "ai-study-planner-fd539.firebaseapp.com",
@@ -11,4 +16,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export default app
+export const auth = getAuth(app)
+
+export const provider = new GoogleAuthProvider()
