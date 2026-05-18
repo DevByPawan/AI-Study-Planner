@@ -290,21 +290,7 @@ function App() {
   }, [])
   return (
     <>
-      {
-        user ? (
 
-          <button onClick={handleLogout}>
-            Logout
-          </button>
-
-        ) : (
-
-          <button onClick={handleGoogleLogin}>
-            Sign in with Google
-          </button>
-
-        )
-      }
       <div className="min-h-screen bg-[#0f172a] text-white flex">
         <Sidebar />
 
@@ -326,10 +312,59 @@ function App() {
 
             </div>
 
-            <div className="bg-blue-600 px-5 py-3 rounded-2xl">
-              Productivity: {productivity}%
-            </div>
+            <div className="flex items-center gap-4">
 
+              {
+                user ? (
+
+                  <div className="flex items-center gap-3">
+
+                    <img
+                      src={
+                        user.photoURL ||
+                        "https://i.pravatar.cc/150?img=3"
+                      }
+                      alt="profile"
+                      className="w-12 h-12 rounded-full border-2 border-blue-500 object-cover"
+                    />
+                    <div>
+
+                      <p className="font-semibold">
+                        {user.displayName}
+                      </p>
+
+                      <p className="text-sm text-gray-400">
+                        Logged In
+                      </p>
+
+                    </div>
+
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl transition"
+                    >
+                      Logout
+                    </button>
+
+                  </div>
+
+                ) : (
+
+                  <button
+                    onClick={handleGoogleLogin}
+                    className="bg-blue-600 hover:bg-blue-700 px-5 py-3 rounded-2xl transition font-semibold"
+                  >
+                    Sign in with Google
+                  </button>
+
+                )
+              }
+
+              <div className="bg-blue-600 px-5 py-3 rounded-2xl">
+                Productivity: {productivity}%
+              </div>
+
+            </div>
           </div>
 
           {/* AI Smart Scheduler */}
